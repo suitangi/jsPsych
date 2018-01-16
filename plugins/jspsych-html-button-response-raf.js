@@ -8,7 +8,7 @@
  *
  **/
 
-jsPsych.plugins["html-button-response"] = (function() {
+jsPsych.plugins["html-button-response-raf"] = (function() {
 
   var plugin = {};
 
@@ -104,18 +104,21 @@ jsPsych.plugins["html-button-response"] = (function() {
     if (trial.prompt !== null) {
       html += trial.prompt;
     }
-    display_element.innerHTML = html;
 
     // start time
-    var start_time = performance.now();
+    var start_time;
 
-    // add event listeners to buttons
-    for (var i = 0; i < trial.choices.length; i++) {
-      display_element.querySelector('#jspsych-html-button-response-button-' + i).addEventListener('click', function(e){
-        var choice = e.currentTarget.getAttribute('data-choice'); // don't use dataset for jsdom compatibility
-        after_response(choice);
-      });
-    }
+    window.requestAnimationFrame(function(timestamp){
+      display_element.innerHTML = html;
+      // add event listeners to buttons
+      for (var i = 0; i < trial.choices.length; i++) {
+        display_element.querySelector('#jspsych-html-button-response-button-' + i).addEventListener('click', function(e){
+          var choice = e.currentTarget.getAttribute('data-choice'); // don't use dataset for jsdom compatibility
+          after_response(choice);
+        });
+      }
+      start_time = timestamp;
+    });
 
     // store response
     var response = {
