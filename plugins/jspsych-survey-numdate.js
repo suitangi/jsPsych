@@ -65,6 +65,18 @@ jsPsych.plugins['survey-numdate'] = (function() {
             default: undefined,
             description: 'The legal minimum value for the response.'
           },
+          feedback: {
+            type: jsPsych.plugins.parameterType.STRING,
+            pretty_name: 'Feedback',
+            default: "",
+            description: 'The feedback for the response. %r for response given, %q for question.'
+          },
+          feedback_time: {
+            type: jsPsych.plugins.parameterType.INT,
+            pretty_name: 'Feedback Time',
+            default: 0,
+            description: 'The feedback time for the response, in seconds (if 0, must click to continue).'
+          },
           required: {
             type: jsPsych.plugins.parameterType.BOOL,
             pretty_name: 'Required',
@@ -133,9 +145,13 @@ jsPsych.plugins['survey-numdate'] = (function() {
       html += '<p class="jspsych-survey-numdate">' + trial.questions[i].prompt + '</p>';
       var autofocus = i == 0 ? "autofocus " : "";
       var req = trial.questions[i].required ? "required " : "";
-      var min = typeof trial.questions[i].max == 'undefined' ? 'max="' + trial.questions[i].max + '" ': "";
+      var max = typeof trial.questions[i].max == 'undefined' ? 'max="' + trial.questions[i].max + '" ': "";
       var min = typeof trial.questions[i].min == 'undefined' ? 'min="' + trial.questions[i].min + '" ' : "";
-      html += '<input type="' + trial.questions[i].type + '" step="' + trial.questions[i].step' + '" name="#jspsych-survey-numdate-response-' + i + '" size="'+trial.questions[i].columns+'" value="'+trial.questions[i].value+'" '+autofocus+req+max+min'></input>';
+      html += '<input type="' + trial.questions[i].type + '" step="' + trial.questions[i].step' +
+        '" name="#jspsych-survey-numdate-response-' + i +
+        '" size="' + trial.questions[i].columns +
+        '" value="' + trial.questions[i].value +
+        '" ' + autofocus + req + max + min + '></input>';
       html += '</div>';
     }
 
